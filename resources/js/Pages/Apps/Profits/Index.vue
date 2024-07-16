@@ -19,45 +19,26 @@
                             <div class="card-body">
                                 <form @submit.prevent="filter">
                                     <div class="row">
-                                        <div class="col-md-5">
+                                        <div class="col-md-9">
                                             <div class="mb-3">
                                                 <label
                                                     class="form-label fw-bold"
-                                                    >TANGGAL MULAI</label
+                                                    >RENTANG WAKTU</label
                                                 >
                                                 <input
                                                     type="date"
-                                                    v-model="start_date"
+                                                    id="date-range-filter"
+                                                    v-model="date_range"
                                                     class="form-control"
                                                 />
                                             </div>
-                                            <div
-                                                v-if="errors.start_date"
-                                                class="alert alert-danger"
-                                            >
-                                                {{ errors.start_date }}
-                                            </div>
                                         </div>
-                                        <div class="col-md-5">
-                                            <div class="mb-3">
-                                                <label
-                                                    class="form-label fw-bold"
-                                                    >TANGGAL SELESAI</label
-                                                >
-                                                <input
-                                                    type="date"
-                                                    v-model="end_date"
-                                                    class="form-control"
-                                                />
-                                            </div>
-                                            <div
-                                                v-if="errors.end_date"
-                                                class="alert alert-danger"
-                                            >
-                                                {{ errors.end_date }}
-                                            </div>
-                                        </div>
-                                        <div class="col-md-2">
+                                        <div
+                                            :class="{
+                                                'col-md-2': has_filter,
+                                                'col-md-3': !has_filter,
+                                            }"
+                                        >
                                             <div class="mb-3">
                                                 <label
                                                     class="form-label fw-bold text-white"
@@ -68,6 +49,23 @@
                                                 >
                                                     <i class="fa fa-filter"></i>
                                                     FILTER
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-1" v-if="has_filter">
+                                            <div class="mb-3">
+                                                <label
+                                                    class="form-label fw-bold text-white"
+                                                    >*</label
+                                                >
+                                                <button
+                                                    type="button"
+                                                    @click="clearFilter"
+                                                    class="btn btn-md btn-danger border-0 shadow w-100"
+                                                >
+                                                    <i
+                                                        class="fa-solid fa-circle-xmark"
+                                                    ></i>
                                                 </button>
                                             </div>
                                         </div>
@@ -99,7 +97,7 @@
                                                     background-color: #e6e6e7;
                                                 "
                                             >
-                                                <th scope="col">Tanggal</th>
+                                                <th scope="col">Date</th>
                                                 <th scope="col">Invoice</th>
                                                 <th scope="col">Total</th>
                                             </tr>
@@ -157,17 +155,14 @@
 </template>
 
 <script>
-//import layout App
 import LayoutApp from "../../../Layouts/App.vue";
-
-//import Heade and Link from Inertia
 import { Head, Link } from "@inertiajs/inertia-vue3";
-
-//import hook ref
-import { ref } from "vue";
-
-//import inertia adapter
+import { onMounted, ref, watch } from "vue";
 import { Inertia } from "@inertiajs/inertia";
+// Flatpickr
+import flatpickr from "flatpickr";
+import "flatpickr/dist/flatpickr.css";
+import "flatpickr/dist/themes/airbnb.css";
 
 export default {
     //layout
@@ -186,23 +181,64 @@ export default {
         total: Number,
     },
 
-    //composition API
     setup() {
-        //define state
-        const start_date = ref(
-            "" ||
-                new Date().toLocaleDateString("en-CA") ||
-                new URL(document.location).searchParams.get("start_date")
-        );
-        const end_date = ref(
-            "" ||
-                new Date().toLocaleDateString("en-CA") ||
-                new URL(document.location).searchParams.get("end_date")
-        );
+        const start_date = ref("");
+        const end_date = ref("");
+        const date_range = ref(null);
+        const has_filter = ref(false);
 
-        //define methods filter
+        onMounted(() => {
+            flatpickr("#date-range-filter", {
+                mode: "range",
+                dateFormat: "Y-m-d",
+                altFormat: "d F Y",
+                altInput: true,
+                onChange: (date, string_date) => {
+                    separateDate(string_date);
+                },
+                defaultDate: generateDefaultDate(),
+                locale: {
+                    rangeSeparator: "  >>  ",
+                },
+            });
+
+            start_date.value = generateDefaultDate()[0];
+            end_date.value = generateDefaultDate()[1];
+        });
+
+        watch(start_date, () => {
+            if (
+                new URL(document.location).searchParams.get("start_date") &&
+                new URL(document.location).searchParams.get("end_date")
+            ) {
+                has_filter.value = true;
+            }
+        });
+        const separateDate = (dateString) => {
+            let dates = dateString.split("  >>  ");
+            start_date.value = dates[0];
+            end_date.value = dates[1];
+        };
+
+        const generateDefaultDate = () => {
+            let year = new Date().getFullYear();
+            let month = new Date().getMonth();
+
+            let firstDay =
+                new URL(document.location).searchParams.get("start_date") ||
+                new Date(year, month, 1).toLocaleDateString("en-CA");
+            let lastDay =
+                new URL(document.location).searchParams.get("end_date") ||
+                new Date(year, month + 1, 0).toLocaleDateString("en-CA");
+            return [firstDay, lastDay];
+        };
+
+        const clearFilter = () => {
+            Inertia.get("/apps/sales");
+        };
+
         const filter = () => {
-            Inertia.get("/apps/profits/filter", {
+            Inertia.get("/apps/sales/filter", {
                 start_date: start_date.value,
                 end_date: end_date.value,
             });
@@ -211,6 +247,11 @@ export default {
         return {
             start_date,
             end_date,
+            date_range,
+            has_filter,
+            generateDefaultDate,
+            separateDate,
+            clearFilter,
             filter,
         };
     },
