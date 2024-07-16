@@ -1,47 +1,99 @@
 <template>
     <Head>
-        <title>Add New Category - Aplikasi Kasir</title>
+        <title>Kategori Baru - Aplikasi Kasir</title>
     </Head>
     <main class="c-main">
         <div class="container-fluid">
             <div class="fade-in">
                 <div class="row">
                     <div class="col-md-12">
-                        <div class="card border-0 rounded-3 shadow border-top-purple">
+                        <div
+                            class="card border-0 rounded-3 shadow border-top-purple"
+                        >
                             <div class="card-header">
-                                <span class="font-weight-bold"><i class="fa fa-folder"></i> ADD NEW CATEGORY</span>
+                                <span class="font-weight-bold"
+                                    ><i class="fa fa-folder"></i> TAMBAHKAN
+                                    KATEGORI BARU</span
+                                >
                             </div>
                             <div class="card-body">
-
                                 <form @submit.prevent="submit">
                                     <div class="mb-3">
-                                        <input class="form-control" @input="form.image = $event.target.files[0]" :class="{ 'is-invalid': errors.image }" type="file">
+                                        <input
+                                            class="form-control"
+                                            @input="
+                                                form.image =
+                                                    $event.target.files[0]
+                                            "
+                                            :class="{
+                                                'is-invalid': errors.image,
+                                            }"
+                                            type="file"
+                                        />
                                     </div>
-                                    <div v-if="errors.image" class="alert alert-danger">
+                                    <div
+                                        v-if="errors.image"
+                                        class="alert alert-danger"
+                                    >
                                         {{ errors.image }}
                                     </div>
                                     <div class="mb-3">
-                                        <label class="fw-bold">Category Name</label>
-                                        <input class="form-control" v-model="form.name" :class="{ 'is-invalid': errors.name }" type="text" placeholder="Category Name">
+                                        <label class="fw-bold"
+                                            >Nama Kategori</label
+                                        >
+                                        <input
+                                            class="form-control"
+                                            v-model="form.name"
+                                            :class="{
+                                                'is-invalid': errors.name,
+                                            }"
+                                            type="text"
+                                            placeholder="Nama Kategori"
+                                        />
                                     </div>
-                                    <div v-if="errors.name" class="alert alert-danger">
+                                    <div
+                                        v-if="errors.name"
+                                        class="alert alert-danger"
+                                    >
                                         {{ errors.name }}
                                     </div>
                                     <div class="mb-3">
-                                        <label class="fw-bold">Description</label>
-                                        <textarea class="form-control" v-model="form.description" :class="{ 'is-invalid': errors.description }" type="text" rows="4" placeholder="Description"></textarea>
+                                        <label class="fw-bold">Deksprpsi</label>
+                                        <textarea
+                                            class="form-control"
+                                            v-model="form.description"
+                                            :class="{
+                                                'is-invalid':
+                                                    errors.description,
+                                            }"
+                                            type="text"
+                                            rows="4"
+                                            placeholder="Deksprpsi"
+                                        ></textarea>
                                     </div>
-                                    <div v-if="errors.description" class="alert alert-danger">
+                                    <div
+                                        v-if="errors.description"
+                                        class="alert alert-danger"
+                                    >
                                         {{ errors.description }}
                                     </div>
                                     <div class="row">
                                         <div class="col-12">
-                                            <button class="btn btn-primary shadow-sm rounded-sm" type="submit">SAVE</button>
-                                            <button class="btn btn-warning shadow-sm rounded-sm ms-3" type="reset">RESET</button>
+                                            <button
+                                                class="btn btn-primary shadow-sm rounded-sm"
+                                                type="submit"
+                                            >
+                                                SIMPAN
+                                            </button>
+                                            <button
+                                                class="btn btn-warning shadow-sm rounded-sm ms-3"
+                                                type="reset"
+                                            >
+                                                RESET
+                                            </button>
                                         </div>
                                     </div>
                                 </form>
-
                             </div>
                         </div>
                     </div>
@@ -52,79 +104,77 @@
 </template>
 
 <script>
-    //import layout App
-    import LayoutApp from '../../../Layouts/App.vue';
+//import layout App
+import LayoutApp from "../../../Layouts/App.vue";
 
-    //import Heade and Link from Inertia
-    import { Head, Link } from '@inertiajs/inertia-vue3';
-    
-    //import reactive from vue
-    import { reactive } from 'vue';
+//import Heade and Link from Inertia
+import { Head, Link } from "@inertiajs/inertia-vue3";
 
-    //import inerita adapter
-    import { Inertia } from '@inertiajs/inertia';
+//import reactive from vue
+import { reactive } from "vue";
 
-    //import sweet alert2
-    import Swal from 'sweetalert2';
+//import inerita adapter
+import { Inertia } from "@inertiajs/inertia";
 
-    export default {
-        //layout
-        layout: LayoutApp,
+//import sweet alert2
+import Swal from "sweetalert2";
 
-        //register components
-        components: {
-            Head,
-            Link
-        },
+export default {
+    //layout
+    layout: LayoutApp,
 
-        //props
-        props: {
-            errors: Object
-        },
+    //register components
+    components: {
+        Head,
+        Link,
+    },
 
-        //composition API
-        setup() {
+    //props
+    props: {
+        errors: Object,
+    },
 
-            //define form with reactive
-            const form = reactive({
-                name: '',
-                image: '',
-                description: ''
-            });
+    //composition API
+    setup() {
+        //define form with reactive
+        const form = reactive({
+            name: "",
+            image: "",
+            description: "",
+        });
 
-            //method "submit"
-            const submit = () => {
-
-                //send data to server
-                Inertia.post('/apps/categories', {
+        //method "submit"
+        const submit = () => {
+            //send data to server
+            Inertia.post(
+                "/apps/categories",
+                {
                     //data
                     name: form.name,
                     image: form.image,
-                    description: form.description
-                }, {
+                    description: form.description,
+                },
+                {
                     onSuccess: () => {
                         //show success alert
                         Swal.fire({
-                            title: 'Success!',
-                            text: 'Category saved successfully.',
-                            icon: 'success',
+                            title: "Success!",
+                            text: "Category saved successfully.",
+                            icon: "success",
                             showConfirmButton: false,
-                            timer: 2000
+                            timer: 2000,
                         });
                     },
-                });
+                }
+            );
+        };
 
-            }
-
-            return {
-                form,
-                submit,
-            }
-
-        }
-    }
+        return {
+            form,
+            submit,
+        };
+    },
+};
 </script>
 
-<style>
-
-</style>
+<style></style>

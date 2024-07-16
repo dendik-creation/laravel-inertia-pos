@@ -1,20 +1,20 @@
 <div class="title" style="padding-bottom: 13px">
     <div style="text-align: center;text-transform: uppercase;font-size: 15px">
-        SantriKoding
+        {{ env('APP_NAME') }}
     </div>
     <div style="text-align: center">
-        Alamat: Desa Gedangalas, Kec. Gajah, Kab. Demak
+        Alamat: -
     </div>
     <div style="text-align: center">
-        Telp: 0857-9087-9087
+        Telp: -
     </div>
 </div>
 <table style="width: 100%">
     <thead>
         <tr style="background-color: #e6e6e7;">
-            <th scope="col">Date</th>
+            <th scope="col">Tanggal</th>
             <th scope="col">Invoice</th>
-            <th scope="col">Cashier</th>
+            <th scope="col">Kasir</th>
             <th scope="col">Customer</th>
             <th scope="col">Total</th>
         </tr>

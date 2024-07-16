@@ -15,21 +15,21 @@
                                 <form @submit.prevent="handleSearch">
                                     <div class="input-group mb-3">
 
-                                        <Link href="/apps/users/create" v-if="hasAnyPermission(['users.create'])" class="btn btn-primary input-group-text"> <i class="fa fa-plus-circle me-2"></i> NEW</Link>
-                                        
+                                        <Link href="/apps/users/create" v-if="hasAnyPermission(['users.create'])" class="btn btn-primary input-group-text"> <i class="fa fa-plus-circle me-2"></i> BARU</Link>
+
                                         <input type="text" class="form-control" v-model="search" placeholder="search by user name...">
 
-                                        <button class="btn btn-primary input-group-text" type="submit"> <i class="fa fa-search me-2"></i> SEARCH</button>
+                                        <button class="btn btn-primary input-group-text" type="submit"> <i class="fa fa-search me-2"></i> CARI</button>
 
                                     </div>
                                 </form>
                                 <table class="table table-striped table-bordered table-hover">
                                     <thead>
                                         <tr>
-                                            <th scope="col">Full Name</th>
+                                            <th scope="col">Nama Lengkap</th>
                                             <th scope="col">Email Address</th>
                                             <th scope="col">Roles</th>
-                                            <th scope="col" style="width:20%">Actions</th>
+                                            <th scope="col" style="width:20%">Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -43,7 +43,7 @@
                                             </td>
                                             <td class="text-center">
                                                 <Link :href="`/apps/users/${user.id}/edit`" v-if="hasAnyPermission(['users.edit'])" class="btn btn-success btn-sm me-2"><i class="fa fa-pencil-alt me-1"></i> EDIT</Link>
-                                                <button @click.prevent="destroy(user.id)" v-if="hasAnyPermission(['users.delete'])" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i> DELETE</button>
+                                                <button @click.prevent="destroy(user.id)" v-if="hasAnyPermission(['users.delete'])" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i> HAPUS</button>
                                             </td>
                                         </tr>
                                     </tbody>
@@ -70,7 +70,7 @@
 
     //import ref from vue
     import { ref } from 'vue';
-    
+
     //import inertia adapter
     import { Inertia } from '@inertiajs/inertia';
 
@@ -101,7 +101,7 @@
             //define method search
             const handleSearch = () => {
                 Inertia.get('/apps/users', {
-                    
+
                     //send params "q" with value from state "search"
                     q: search.value,
                 });

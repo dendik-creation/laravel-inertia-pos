@@ -120,13 +120,13 @@
     <div class="content">
         <div class="title" style="padding-bottom: 13px">
             <div style="text-align: center;text-transform: uppercase;font-size: 15px">
-                SantriKoding
+                {{ env('APP_NAME')  }}
             </div>
             <div style="text-align: center">
-                Alamat: Desa Gedangalas, Kec. Gajah, Kab. Demak
+                Alamat: -
             </div>
             <div style="text-align: center">
-                Telp: 0857-9087-9087
+                Telp: -
             </div>
         </div>
 
